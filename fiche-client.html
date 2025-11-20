@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>IBTIDENT® – Fiche de Suivi Prothèse (RGPD)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+  <h1>Fiche de Suivi Prothèse</h1>
+  <p>Suivi technique de votre prothèse dentaire par identifiant unique.</p>
+</header>
+<nav>
+  <a href="index.html">Accueil</a>
+  <a href="abonnements.html">Abonnements</a>
+  <a href="ibticheck.html">IBTI’CHECK® (infos)</a>
+  <a href="ibticheck-dynamique.html">IBTI’CHECK® (photo)</a>
+  <a href="ehpad-premium.html">EHPAD</a>
+  <a href="ambuldent.html">Ambuldent®</a>
+  <a href="dentistes.html">Dentistes</a>
+  <a href="contact.html">Contact</a>
+</nav>
+<hr/>
+<main>
+  <section class="card">
+    <h2>Rechercher votre fiche de suivi</h2>
+    <p>
+      Entrez l'identifiant unique de votre prothèse (ex: IBT-A8C-4F2) pour accéder à son historique d'entretien.
+      <strong style="color: var(--color-accent);">Aucune donnée personnelle n'est requise.</strong>
+    </p>
+    <form id="search-form">
+      <label>Identifiant Prothèse<br/>
+        <input type="text" id="prothese-id" placeholder="IBT-XXX-XXX" required />
+      </label><br/><br/>
+      <button type="submit" class="btn">Rechercher</button>
+    </form>
+  </section>
+
+  <section class="card" id="fiche-resultat" style="display: none;">
+    <h2>Détails de la Prothèse <span id="display-id"></span></h2>
+    <p>
+      <strong>Type de Prothèse :</strong> <span id="type-prothese"></span><br/>
+      <strong>Date de Création :</strong> <span id="date-creation"></span><br/>
+      <strong>Prochain Entretien Prévu :</strong> <span id="prochain-entretien"></span>
+    </p>
+
+    <h3>Historique des Entretiens</h3>
+    <table id="historique-table" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+      <thead>
+        <tr style="background-color: #f2f2f2;">
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Date</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Opération</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Les lignes seront ajoutées par JavaScript -->
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card" id="fiche-erreur" style="display: none;">
+    <h2>Fiche non trouvée</h2>
+    <p>L'identifiant de prothèse entré n'a pas été trouvé. Veuillez vérifier et réessayer.</p>
+  </section>
+</main>
+
+<script>
+  document.getElementById('search-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const id = document.getElementById('prothese-id').value.toUpperCase().trim();
+    const resultSection = document.getElementById('fiche-resultat');
+    const errorSection = document.getElementById('fiche-erreur');
+    const historiqueBody = document.querySelector('#historique-table tbody');
+
+    // Masquer les sections précédentes
+    resultSection.style.display = 'none';
+    errorSection.style.display = 'none';
+    historiqueBody.innerHTML = '';
+
+    // --- Simulation de données anonymes (à remplacer par une vraie API si besoin) ---
+    const mockData = {
+      'IBT-A8C-4F2': {
+        type: 'Prothèse complète maxillaire',
+        creation: '2023-05-10',
+        prochain: '2024-05-10',
+        historique: [
+          { date: '2023-11-15', operation: 'Entretien Premium', statut: 'Terminé' },
+          { date: '2024-05-10', operation: 'Entretien Essentiel', statut: 'Prévu' }
+        ]
+      },
+      'IBT-D9E-7G1': {
+        type: 'Prothèse partielle mandibulaire',
+        creation: '2022-01-20',
+        prochain: '2024-01-20',
+        historique: [
+          { date: '2023-01-20', operation: 'Entretien Essentiel', statut: 'Terminé' },
+          { date: '2023-07-25', operation: 'Réparation mineure', statut: 'Terminé' }
+        ]
+      }
+    };
+    // -----------------------------------------------------------------------------
+
+    const fiche = mockData[id];
+
+    if (fiche) {
+      document.getElementById('display-id').textContent = id;
+      document.getElementById('type-prothese').textContent = fiche.type;
+      document.getElementById('date-creation').textContent = fiche.creation;
+      document.getElementById('prochain-entretien').textContent = fiche.prochain;
+
+      fiche.historique.forEach(item => {
+        const row = historiqueBody.insertRow();
+        row.insertCell().textContent = item.date;
+        row.insertCell().textContent = item.operation;
+        row.insertCell().textContent = item.statut;
+      });
+
+      resultSection.style.display = 'block';
+    } else {
+      errorSection.style.display = 'block';
+    }
+  });
+</script>
+
+<footer>
+  IBTIDENT® – Fiche Client RGPD · Contact : 07 66 54 37 09 · ibtident@gmail.com
+</footer>
+</body>
+</html>
